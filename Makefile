@@ -8,9 +8,11 @@ namespace = github.com/istherepie/request-monitor
 # commit_hash := $(shell git rev-parse --short=7 HEAD)
 
 # Targets
-all: testing clean build
+.PHONY: test
 
-test:
+all: test clean build
+
+test: 
 	@echo "Running all tests"
 	go clean -testcache
 	go test -v $(namespace)/webserver
