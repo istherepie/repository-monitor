@@ -30,7 +30,7 @@ Alternatively you may build a docker container using the supplied file:
 	docker build -t <namespace/image>:<tag> .
 ```
 
-or use the latest available container from docker hub:
+or use the latest available container from [docker hub](https://hub.docker.com/repository/docker/istherepie/request-monitor):
 
 ```
 	docker pull istherepie/request-monitor:latest
