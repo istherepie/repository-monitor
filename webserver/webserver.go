@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -11,10 +12,11 @@ import (
 type Headers map[string][]string
 
 type JSONResponse struct {
-	ServiceID string     `json:"service_id"`
-	Message   string     `json:"message"`
-	Headers   Headers    `json:"headers"`
-	Params    url.Values `json:"query_params"`
+	ServiceID string                 `json:"service_id"`
+	Message   string                 `json:"message"`
+	Headers   Headers                `json:"headers"`
+	Params    url.Values             `json:"query_params"`
+	Body      map[string]interface{} `json:"body"`
 }
 
 type ServiceHandler struct {
@@ -80,15 +82,28 @@ func (s ServiceHandler) GetParams(params url.Values) map[string][]string {
 func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 
 	// Access log
-	s.Log.Printf("[INFO] %v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
+	s.Log.Printf("INFO -%v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
 
-	queryParams := r.URL.Query()
-
+	// Prepare response
 	response := JSONResponse{}
 	response.ServiceID = s.ID
 	response.Message = "Hello World!!!!"
+
+	// Parse request headers
 	response.Headers = s.GetHeaders(r.Header)
+
+	// Parse query params
+	queryParams := r.URL.Query()
 	response.Params = s.GetParams(queryParams)
+
+	// Parse request body
+	err := json.NewDecoder(r.Body).Decode(&response.Body)
+
+	if err != nil && err != io.EOF {
+		s.Log.Printf("ERROR - Failed to decode body: %v\n", err)
+		http.Error(w, "Unable to parse request body", http.StatusBadRequest)
+		return
+	}
 
 	s.send(w, response)
 }
