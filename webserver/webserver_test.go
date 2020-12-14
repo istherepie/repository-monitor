@@ -18,8 +18,10 @@ func TestHandlerStatusCode(t *testing.T) {
 
 	rec := httptest.NewRecorder()
 
-	// setup handler
+	// quiet logger
 	logger := log.New(ioutil.Discard, "", log.Ldate|log.Ltime)
+
+	// Setup handler
 	handler := Mux("test-service-1", logger)
 
 	// Run handler
@@ -40,8 +42,10 @@ func TestHandlerResponse(t *testing.T) {
 
 	rec := httptest.NewRecorder()
 
-	// setup handler
+	// quiet logger
 	logger := log.New(ioutil.Discard, "", log.Ldate|log.Ltime)
+
+	// setup handler
 	handler := Mux("test-service-1", logger)
 
 	// Run handler

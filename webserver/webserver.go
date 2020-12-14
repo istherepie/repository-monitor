@@ -1,8 +1,8 @@
 package webserver
 
 import (
+	"bufio"
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -96,21 +96,16 @@ func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 	response.Params = s.GetParams(queryParams)
 
 	// Parse request body
-	var parsedBody map[string]interface{}
-	err := json.NewDecoder(r.Body).Decode(&parsedBody)
+	// var parsedBody map[string]interface{}
+	scanner := bufio.NewScanner(r.Body)
 
-	if err != nil {
-		if err != io.EOF {
-			s.Log.Printf("ERROR - Failed to decode body: %v\n", err)
-			http.Error(w, "Unable to parse request body", http.StatusBadRequest)
-			return
-		}
+	data := scanner.Bytes()
 
-		// This will be rendered as `"body": {}` rather than `"body": null`
+	parseErr := json.Unmarshal(data, &response.Body)
+
+	if parseErr != nil {
+		s.Log.Printf("ERROR - Failed to decode body: %v\n", parseErr)
 		response.Body = make(map[string]interface{})
-
-	} else {
-		response.Body = parsedBody
 	}
 
 	s.send(w, response)
