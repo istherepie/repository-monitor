@@ -13,4 +13,5 @@ dist
 sha256-checksum.txt
 
 # misc
+scratch
 *.log
