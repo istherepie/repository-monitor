@@ -8,25 +8,48 @@ View incoming request information such as,
 * query params
 * request data
 
-## Usage
+
+
+## Installation
 
 Run tests as follows:
-
-```
-	go clean -testcache
-	go test -v github.com/istherepie/request-monitor/webserver
-```
-
-or simply use the shorthand:
 
 ```
 	make test
 ```
 
+Building as binary:
 
-## TODO
+```
+	make build
+```
 
-Everything ...
+Alternatively you may build a docker container using the supplied file:
+
+```
+	docker build -t <namespace/image>:<tag> .
+```
+
+or use the latest available container from docker hub:
+
+```
+	docker pull istherepie/request-monitor:latest
+	docker run --rm -p8080:8080 istherepie/request-monitor:latest
+```
+
+
+
+## Usage
+
+The application takes the following flags:
+
+* -host (string) - Service hostname, defaults to `localhost`.
+* -port (int) - Service port, defaults to `8080`.
+* -id (string) - Service ID/Metaname for the purpose of running multiple instances.
+
+**NOTE:**
+The service port can be overridden by setting the env variable `RM_SERVICE_PORT`,
+this is useful when using task runners/docker containers to start the service.
 
 
 
