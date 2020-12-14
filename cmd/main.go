@@ -28,6 +28,7 @@ func run(ID string, hostname string, port int, logger *log.Logger) int {
 	mux := webserver.Mux(ID, logger)
 
 	// Serve
+	logger.Printf("Starting webserver on address %v\n", address)
 	serveError := http.Serve(listener, mux)
 
 	if serveError != nil {
