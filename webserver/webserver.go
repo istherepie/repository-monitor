@@ -96,12 +96,21 @@ func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 	response.Params = s.GetParams(queryParams)
 
 	// Parse request body
-	err := json.NewDecoder(r.Body).Decode(&response.Body)
+	var parsedBody map[string]interface{}
+	err := json.NewDecoder(r.Body).Decode(&parsedBody)
 
-	if err != nil && err != io.EOF {
-		s.Log.Printf("ERROR - Failed to decode body: %v\n", err)
-		http.Error(w, "Unable to parse request body", http.StatusBadRequest)
-		return
+	if err != nil {
+		if err != io.EOF {
+			s.Log.Printf("ERROR - Failed to decode body: %v\n", err)
+			http.Error(w, "Unable to parse request body", http.StatusBadRequest)
+			return
+		}
+
+		// This will be rendered as `"body": {}` rather than `"body": null`
+		response.Body = make(map[string]interface{})
+
+	} else {
+		response.Body = parsedBody
 	}
 
 	s.send(w, response)
