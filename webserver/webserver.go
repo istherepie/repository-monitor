@@ -4,11 +4,17 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
+type Headers map[string][]string
+
 type JSONResponse struct {
-	ServiceID string `json:"service_id"`
-	Message   string `json:"message"`
+	ServiceID string     `json:"service_id"`
+	Message   string     `json:"message"`
+	Headers   Headers    `json:"headers"`
+	Params    url.Values `json:"params"`
 }
 
 type ServiceHandler struct {
@@ -37,14 +43,52 @@ func (s ServiceHandler) send(w http.ResponseWriter, response JSONResponse) {
 	w.Write(jsonResponse)
 }
 
+func (s ServiceHandler) Reformat(data []string) []string {
+	var values []string
+	for _, value := range data {
+		value = strings.ToLower(value)
+		value = strings.Replace(value, ",", "", -1)
+		values = strings.Fields(value)
+	}
+	return values
+}
+
+func (s ServiceHandler) GetHeaders(header http.Header) Headers {
+
+	h := make(Headers)
+
+	for headerKey, headerValues := range header {
+		key := strings.ToLower(headerKey)
+		h[key] = s.Reformat(headerValues)
+	}
+
+	return h
+}
+
+func (s ServiceHandler) GetParams(params url.Values) map[string][]string {
+
+	h := make(map[string][]string)
+
+	for pKey, pValues := range params {
+		key := strings.ToLower(pKey)
+		h[key] = s.Reformat(pValues)
+	}
+
+	return h
+}
+
 func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 
 	// Access log
 	s.Log.Printf("[INFO] %v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
 
+	queryParams := r.URL.Query()
+
 	response := JSONResponse{}
 	response.ServiceID = s.ID
 	response.Message = "Hello World!!!!"
+	response.Headers = s.GetHeaders(r.Header)
+	response.Params = s.GetParams(queryParams)
 
 	s.send(w, response)
 }
