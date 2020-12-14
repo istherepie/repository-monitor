@@ -82,7 +82,7 @@ func (s ServiceHandler) GetParams(params url.Values) map[string][]string {
 func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 
 	// Access log
-	s.Log.Printf("INFO -%v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
+	s.Log.Printf("INFO request from %v %v %v", r.RemoteAddr, r.Method, r.RequestURI)
 
 	// Prepare response
 	response := JSONResponse{}
