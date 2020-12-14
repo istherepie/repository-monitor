@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -46,10 +47,18 @@ func TestHandlerResponse(t *testing.T) {
 	// Run handler
 	handler.ServeHTTP(rec, req)
 
-	expected := `{"service_id":"test-service-1","message":"Hello World!!!!"}`
+	var body map[string]interface{}
+	err = json.NewDecoder(rec.Body).Decode(&body)
 
-	if rec.Body.String() != expected {
-		t.Errorf("Expected: %v - GOT: %s", expected, rec.Body)
+	if err != nil {
+		t.Errorf("Failed decoding response body: %v\n", err)
+	}
+
+	result := body["message"]
+	expected := "Hello World!!!!"
+
+	if result != expected {
+		t.Errorf("Expected: %v - GOT: %s", expected, result)
 	}
 
 }
