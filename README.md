@@ -8,6 +8,20 @@ View incoming request information such as,
 * query params
 * request data
 
+## Usage
+
+Run tests as follows:
+
+```
+	go clean -testcache
+	go test -v github.com/istherepie/request-monitor/webserver
+```
+
+or simply use the shorthand:
+
+```
+	make test
+```
 
 
 ## TODO
