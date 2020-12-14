@@ -49,8 +49,7 @@ func (s ServiceHandler) Reformat(data []string) []string {
 	var values []string
 	for _, value := range data {
 		value = strings.ToLower(value)
-		value = strings.Replace(value, ",", "", -1)
-		values = strings.Fields(value)
+		values = append(values, value)
 	}
 	return values
 }
