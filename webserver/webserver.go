@@ -14,7 +14,7 @@ type JSONResponse struct {
 	ServiceID string     `json:"service_id"`
 	Message   string     `json:"message"`
 	Headers   Headers    `json:"headers"`
-	Params    url.Values `json:"params"`
+	Params    url.Values `json:"query_params"`
 }
 
 type ServiceHandler struct {
