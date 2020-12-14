@@ -19,7 +19,9 @@ func run() int {
 
 	defer listener.Close()
 
-	mux := webserver.Mux("service-1")
+	logger := log.New(os.Stdout, "Access ", log.Ldate|log.Ltime)
+
+	mux := webserver.Mux("service-1", logger)
 
 	serveError := http.Serve(listener, mux)
 

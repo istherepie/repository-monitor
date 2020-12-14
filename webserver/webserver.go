@@ -12,7 +12,8 @@ type JSONResponse struct {
 }
 
 type ServiceHandler struct {
-	ID string
+	ID  string
+	Log *log.Logger
 }
 
 func (s ServiceHandler) encode(source interface{}, target *[]byte) error {
@@ -39,7 +40,7 @@ func (s ServiceHandler) send(w http.ResponseWriter, response JSONResponse) {
 func (s ServiceHandler) Process(w http.ResponseWriter, r *http.Request) {
 
 	// Access log
-	log.Printf("[INFO] %v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
+	s.Log.Printf("[INFO] %v request from %v %v %v", s.ID, r.RemoteAddr, r.Method, r.RequestURI)
 
 	response := JSONResponse{}
 	response.ServiceID = s.ID
@@ -60,13 +61,13 @@ func (s ServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.Process(w, r)
 }
 
-func Mux(serviceID string) *http.ServeMux {
+func Mux(serviceID string, logger *log.Logger) *http.ServeMux {
 
 	// Multiplexer
 	mux := http.NewServeMux()
 
 	// Init handler
-	handler := ServiceHandler{ID: serviceID}
+	handler := ServiceHandler{ID: serviceID, Log: logger}
 
 	// Register route(s)
 	mux.Handle("/", handler)
