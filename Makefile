@@ -2,7 +2,7 @@
 current_dir := $(shell pwd)
 
 # Namespace
-namespace = github.com/istherepie/request-monitor
+namespace = github.com/istherepie/request-echo
 
 # Get current commit hash
 commit_hash := $(shell git rev-parse --short=7 HEAD)

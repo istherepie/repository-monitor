@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/istherepie/request-monitor/webserver"
+	"github.com/istherepie/request-echo/webserver"
 )
 
 func run(ID string, hostname string, port int, logger *log.Logger) int {
