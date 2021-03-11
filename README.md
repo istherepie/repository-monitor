@@ -30,11 +30,11 @@ Alternatively you may build a docker container using the supplied file:
 	docker build -t <namespace/image>:<tag> .
 ```
 
-or use the latest available container from [docker hub](https://hub.docker.com/repository/docker/istherepie/request-monitor):
+or use the latest available container from [docker hub](https://hub.docker.com/repository/docker/istherepie/request-echo):
 
 ```
-	docker pull istherepie/request-monitor:latest
-	docker run --rm -p8080:8080 istherepie/request-monitor:latest
+	docker pull istherepie/request-echo:latest
+	docker run --rm -p8080:8080 istherepie/request-echo:latest
 ```
 
 

@@ -23,8 +23,8 @@ build:
 	go build -o $(current_dir)/build/request-monitor cmd/main.go
 
 container:
-	docker build -t istherepie/request-monitor:$(commit_hash) .
-	docker tag istherepie/request-monitor:$(commit_hash) istherepie/request-monitor:latest
+	docker build -t istherepie/request-echo:$(commit_hash) .
+	docker tag istherepie/request-echo:$(commit_hash) istherepie/request-echo:latest
 
 clean:
 	@echo "Cleaning up..."
